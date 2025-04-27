@@ -6,10 +6,10 @@ export default class extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
+      table.string('invoice_number').notNullable().unique()
+      table.date('invoice_date').notNullable()
+      table.integer('total_amount').notNullable()
+      table.integer('work_id').unsigned().references('id').inTable('works').onDelete('CASCADE')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

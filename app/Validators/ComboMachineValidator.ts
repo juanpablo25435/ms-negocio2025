@@ -1,4 +1,4 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class ComboMachineValidator {
@@ -23,7 +23,16 @@ export default class ComboMachineValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    machine_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'machines', column: 'id' })
+    ]),
+    combo_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'combos', column: 'id' })
+    ])
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -36,5 +45,10 @@ export default class ComboMachineValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'machine_id.required': 'La máquina es requerida',
+    'machine_id.exists': 'La máquina seleccionada no existe',
+    'combo_id.required': 'El combo es requerido',
+    'combo_id.exists': 'El combo seleccionado no existe'
+  }
 }

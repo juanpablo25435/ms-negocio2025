@@ -1,4 +1,4 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class DepartmentValidator {
@@ -23,7 +23,17 @@ export default class DepartmentValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    name: schema.string({ trim: true }, [
+      rules.required(),
+      rules.minLength(3),
+      rules.maxLength(100),
+      rules.unique({ 
+        table: 'departments', 
+        column: 'name',
+      })
+    ])
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -36,5 +46,10 @@ export default class DepartmentValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'name.required': 'El nombre del departamento es requerido',
+    'name.minLength': 'El nombre debe tener al menos 3 caracteres',
+    'name.maxLength': 'El nombre no puede exceder los 100 caracteres',
+    'name.unique': 'Ya existe un departamento con este nombre'
+  }
 }

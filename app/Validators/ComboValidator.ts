@@ -1,4 +1,4 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class ComboValidator {
@@ -23,7 +23,29 @@ export default class ComboValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    name: schema.string({ trim: true }, [
+      rules.required(),
+      rules.minLength(3),
+      rules.maxLength(255)
+    ]),
+    
+    description: schema.string({ trim: true }, [
+      rules.required(),
+      rules.minLength(10),
+      rules.maxLength(1000)
+    ]),
+    
+    price: schema.number([
+      rules.required(),
+      rules.range(0.01, 999999.99) // Rango de precios válido
+    ]),
+    
+    services_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'services', column: 'id' })
+    ])
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -36,5 +58,19 @@ export default class ComboValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'name.required': 'El nombre del combo es requerido',
+    'name.minLength': 'El nombre debe tener al menos 3 caracteres',
+    'name.maxLength': 'El nombre no puede exceder los 255 caracteres',
+    
+    'description.required': 'La descripción es requerida',
+    'description.minLength': 'La descripción debe tener al menos 10 caracteres',
+    'description.maxLength': 'La descripción no puede exceder los 1000 caracteres',
+    
+    'price.required': 'El precio es requerido',
+    'price.range': 'El precio debe estar entre 0.01 y 999999.99',
+    
+    'services_id.required': 'El servicio asociado es requerido',
+    'services_id.exists': 'El servicio seleccionado no existe'
+  }
 }

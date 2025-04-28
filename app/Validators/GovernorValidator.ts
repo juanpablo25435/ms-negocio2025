@@ -1,4 +1,4 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class GovernorValidator {
@@ -23,7 +23,29 @@ export default class GovernorValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    name: schema.string({ trim: true }, [
+      rules.required(),
+      rules.minLength(3),
+      rules.maxLength(255),
+      rules.unique({ 
+        table: 'governors', 
+        column: 'name',
+        caseInsensitive: true
+      })
+    ]),
+    
+    department_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'departments', column: 'id' })
+    ]),
+    
+    user_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'users', column: 'id' }),
+      rules.unique({ table: 'governors', column: 'user_id' })
+    ])
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -36,5 +58,17 @@ export default class GovernorValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'name.required': 'El nombre del gobernador es requerido',
+    'name.minLength': 'El nombre debe tener al menos 3 caracteres',
+    'name.maxLength': 'El nombre no puede exceder los 255 caracteres',
+    'name.unique': 'Ya existe un gobernador con este nombre',
+    
+    'department_id.required': 'El departamento es requerido',
+    'department_id.exists': 'El departamento seleccionado no existe',
+    
+    'user_id.required': 'El usuario asociado es requerido',
+    'user_id.exists': 'El usuario seleccionado no existe',
+    'user_id.unique': 'Este usuario ya está asignado a otro gobernador'
+  }
 }

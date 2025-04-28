@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Governor from 'App/Models/Governor';
+import GovernorValidator from 'App/Validators/GovernorValidator';
 
 export default class GovernorsController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,17 +21,17 @@ export default class GovernorsController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theGovernor: Governor = await Governor.create(body);
+        const validatedData = await request.validate(GovernorValidator);
+        const theGovernor: Governor = await Governor.create(validatedData);
         return theGovernor;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theGovernor: Governor = await Governor.findOrFail(params.id);
-        const body = request.body();
-        theGovernor.name = body.name;
-        theGovernor.department_id = body.department_id;
-        theGovernor.user_id = body.user_id;
+        const validatedData = await request.validate(GovernorValidator);
+        theGovernor.name = validatedData.name;
+        theGovernor.department_id = validatedData.department_id;
+        theGovernor.user_id = validatedData.user_id;
         return await theGovernor.save();
     }
 

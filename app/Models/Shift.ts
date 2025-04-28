@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import Novelty from './Novelty'
 
 export default class Shift extends BaseModel {
   @column({ isPrimary: true })
@@ -22,4 +23,9 @@ export default class Shift extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => Novelty, {
+    foreignKey: 'shift_id',
+  })
+  public novelties: HasMany<typeof Novelty>
 }

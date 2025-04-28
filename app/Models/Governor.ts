@@ -13,6 +13,7 @@ export default class Governor extends BaseModel {
 
   @column()
   public user_id: number
+  
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

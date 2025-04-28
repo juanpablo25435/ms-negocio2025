@@ -1,15 +1,18 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'invoices'
+  protected tableName = 'combos'
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.string('invoice_number').notNullable().unique()
-      table.date('invoice_date').notNullable()
-      table.integer('total_amount').notNullable()
-      table.integer('work_id').unsigned().references('id').inTable('works').onDelete('CASCADE')
+      table.string('name').notNullable()
+      table.string('description').notNullable()
+      table.integer('price').notNullable()
+      table.integer('services_id').unsigned().notNullable().references('id').inTable('services').onDelete('CASCADE')
+      /**
+       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
+       */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

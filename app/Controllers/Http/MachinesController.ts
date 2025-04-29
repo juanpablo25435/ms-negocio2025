@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Machine from 'App/Models/Machine';
+import MachineValidator from 'App/Validators/MachineValidator';
 
 export default class MachinesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,17 +21,18 @@ export default class MachinesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theMachine: Machine = await Machine.create(body);
+        const validatedData = await request.validate(MachineValidator)
+        const theMachine: Machine = await Machine.create(validatedData);
         return theMachine;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theMachine: Machine = await Machine.findOrFail(params.id);
-        const body = request.body();
-        theMachine.name = body.name;
-        theMachine.description = body.description;
-        theMachine.model_year = body.model_year;
+        const validatedData = await request.validate(MachineValidator);
+        // Actualiza los datos de la máquina
+        theMachine.name = validatedData.name;
+        theMachine.description = validatedData.description;
+        theMachine.model_year = validatedData.model_year;
         return await theMachine.save();
     }
 

@@ -1,7 +1,7 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class GpValidator {
+export default class SpareProcedureValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -23,7 +23,17 @@ export default class GpValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    spare_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'spares', column: 'id' })
+    ]),
+    
+    maintenance_procedure_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'maintenance_procedures', column: 'id' })
+    ])
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -36,5 +46,11 @@ export default class GpValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'spare_id.required': 'El repuesto es requerido',
+    'spare_id.exists': 'El repuesto seleccionado no existe',
+    
+    'maintenance_procedure_id.required': 'El procedimiento de mantenimiento es requerido',
+    'maintenance_procedure_id.exists': 'El procedimiento de mantenimiento seleccionado no existe'
+  }
 }

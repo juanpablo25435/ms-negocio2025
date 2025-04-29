@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class SpecialtyValidator {
+export default class SpareValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,14 +24,23 @@ export default class SpecialtyValidator {
    *    ```
    */
   public schema = schema.create({
-    spare_id: schema.number([
+    name: schema.string({ trim: true }, [
       rules.required(),
-      rules.exists({ table: 'spares', column: 'id' })
+      rules.minLength(3),
+      rules.maxLength(255),
+      rules.unique({ table: 'spares', column: 'name' })
     ]),
     
-    maintenance_procedure_id: schema.number([
+    description: schema.string({ trim: true }, [
       rules.required(),
-      rules.exists({ table: 'maintenance_procedures', column: 'id' })
+      rules.minLength(10),
+      rules.maxLength(1000)
+    ]),
+    
+    price: schema.number([
+      rules.required(),
+      rules.range(0.01, 999999.99), // Precio entre 0.01 y 999,999.99
+      rules.unsigned() // Solo valores positivos
     ])
   })
 
@@ -47,10 +56,17 @@ export default class SpecialtyValidator {
    *
    */
   public messages: CustomMessages = {
-    'spare_id.required': 'El repuesto es requerido',
-    'spare_id.exists': 'El repuesto seleccionado no existe',
+    'name.required': 'El nombre del repuesto es requerido',
+    'name.minLength': 'El nombre debe tener al menos 3 caracteres',
+    'name.maxLength': 'El nombre no puede exceder los 255 caracteres',
+    'name.unique': 'Ya existe un repuesto con este nombre',
     
-    'maintenance_procedure_id.required': 'El procedimiento de mantenimiento es requerido',
-    'maintenance_procedure_id.exists': 'El procedimiento de mantenimiento seleccionado no existe'
+    'description.required': 'La descripción es requerida',
+    'description.minLength': 'La descripción debe tener al menos 10 caracteres',
+    'description.maxLength': 'La descripción no puede exceder los 1000 caracteres',
+    
+    'price.required': 'El precio es requerido',
+    'price.range': 'El precio debe estar entre 0.01 y 999,999.99',
+    'price.unsigned': 'El precio debe ser un valor positivo'
   }
 }

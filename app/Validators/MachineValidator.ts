@@ -1,4 +1,4 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class MachineValidator {
@@ -23,7 +23,55 @@ export default class MachineValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    name: schema.string.optional({ trim: true }, [
+      rules.minLength(3),
+      rules.maxLength(255),
+      rules.unique({ 
+        table: 'machines', 
+        column: 'name',
+        whereNot: { id: this.ctx.params.id }
+      })
+    ]),
+    
+    description: schema.string.optional({ trim: true }, [
+      rules.minLength(10),
+      rules.maxLength(1000)
+    ]),
+    
+    model_year: schema.string.optional([
+      rules.regex(/^\d{4}$/),
+      rules.between(1900, new Date().getFullYear() + 1)
+    ]),
+    
+    // Relaciones para actualización
+    combo_ids: schema.array.optional().members(
+      schema.number([rules.exists({ table: 'combos', column: 'id' })])
+    ),
+    
+    service_type_ids: schema.array.optional().members(
+      schema.number([rules.exists({ table: 'service_types', column: 'id' })])
+    ),
+    
+    // Para seguros (incluyendo datos del pivot)
+    insurance_ids: schema.array.optional().members(
+      schema.object().members({
+        insurance_id: schema.number([rules.exists({ table: 'insurances', column: 'id' })]),
+        policy_number: schema.string([rules.maxLength(50)]),
+        start_date: schema.string([rules.regex(/^\d{4}-\d{2}-\d{2}$/)]),
+        end_date: schema.string([rules.regex(/^\d{4}-\d{2}-\d{2}$/)])
+      })
+    ),
+    
+    // Para operadores (incluyendo datos del pivot)
+    operator_ids: schema.array.optional().members(
+      schema.object().members({
+        operator_id: schema.number([rules.exists({ table: 'operators', column: 'id' })]),
+        start_time: schema.string([rules.regex(/^\d{2}:\d{2}$/)]),
+        end_time: schema.string([rules.regex(/^\d{2}:\d{2}$/)])
+      })
+    )
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -36,5 +84,7 @@ export default class MachineValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    
+  }
 }

@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Department from 'App/Models/Department';
+import NotificationService from 'App/Services/NotificationService';
 import DepartmentValidator from 'App/Validators/DepartmentValidator';
 
 export default class DepartmentsController {
@@ -23,6 +24,18 @@ export default class DepartmentsController {
     public async create({ request }: HttpContextContract) {
         const validatedData = await request.validate(DepartmentValidator)
         const theDepartment: Department = await Department.create(validatedData);
+        /*
+        // Obtener email del administrador (puedes cambiarlo según tu lógica)
+      const adminEmail = Env.get('ADMIN_EMAIL')
+
+      // Enviar notificación (no esperamos respuesta para no bloquear la creación)
+      NotificationService.sendDepartmentCreatedNotification(
+        department.name,
+        adminEmail,
+        department.id
+      ).catch(error => {
+        Logger.warn(`Notification failed but department was created: ${error.message}`)
+      })*/
         return theDepartment;
     }
 

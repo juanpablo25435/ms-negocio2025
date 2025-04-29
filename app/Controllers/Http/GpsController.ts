@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Gps from 'App/Models/Gps';
+import GpsValidator from 'App/Validators/GpsValidator';
 
 export default class GpsController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,18 +21,18 @@ export default class GpsController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theGps: Gps = await Gps.create(body);
+        const validatedData = await request.validate(GpsValidator);
+        const theGps: Gps = await Gps.create(validatedData);
         return theGps;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theGps: Gps = await Gps.findOrFail(params.id);
-        const body = request.body();
-        theGps.latitude = body.latitude;
-        theGps.longitude = body.longitude;
-        theGps.altitude = body.altitude;
-        theGps.machine_id = body.machine_id;
+        const validatedData = await request.validate(GpsValidator);
+        theGps.latitude = validatedData.latitude;
+        theGps.longitude = validatedData.longitude;
+        theGps.altitude = validatedData.altitude;
+        theGps.machine_id = validatedData.machine_id;
         return await theGps.save();
     }
 

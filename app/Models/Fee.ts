@@ -9,7 +9,7 @@ export default class Fee extends BaseModel {
   public fee_number: number
 
   @column()
-  public fee_date: string
+  public fee_date: DateTime
 
   @column()
   public fee_amount: number

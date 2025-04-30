@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Policy from 'App/Models/Policy';
+import PolicyValidator from 'App/Validators/PolicyValidator';
 
 export default class PoliciesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,19 +21,19 @@ export default class PoliciesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const thePolicy: Policy = await Policy.create(body);
+        const validatedData = await request.validate(PolicyValidator);
+        const thePolicy: Policy = await Policy.create(validatedData);
         return thePolicy;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const thePolicy: Policy = await Policy.findOrFail(params.id);
-        const body = request.body();
-        thePolicy.policy_number = body.policy_number;
-        thePolicy.start_date = body.start_date;
-        thePolicy.end_date = body.end_date;
-        thePolicy.machine_id = body.machine_id;
-        thePolicy.insurance_id = body.insurance_id;
+        const validatedData = await request.validate(PolicyValidator);
+        thePolicy.policy_number = validatedData.policy_number;
+        thePolicy.start_date = validatedData.start_date;
+        thePolicy.end_date = validatedData.end_date;
+        thePolicy.machine_id = validatedData.machine_id;
+        thePolicy.insurance_id = validatedData.insurance_id;
         return await thePolicy.save();
     }
 

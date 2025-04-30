@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Work from 'App/Models/Work';
+import WorkValidator from 'App/Validators/WorkValidator';
 
 export default class WorksController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,17 +21,17 @@ export default class WorksController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theWork: Work = await Work.create(body);
+        const validatedData = await request.validate(WorkValidator);
+        const theWork: Work = await Work.create(validatedData);
         return theWork;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theWork: Work = await Work.findOrFail(params.id);
-        const body = request.body();
-        theWork.name = body.name;
-        theWork.location = body.location;
-        theWork.combo_id = body.combo_id;
+        const validatedData = await request.validate(WorkValidator);
+        theWork.name = validatedData.name;
+        theWork.location = validatedData.location;
+        theWork.combo_id = validatedData.combo_id;
         return await theWork.save();
     }
 

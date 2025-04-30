@@ -10,7 +10,7 @@ export default class Maintenance extends BaseModel {
   public description: string
 
   @column()
-  public date_performed: string
+  public date_performed: DateTime
 
   @column()
   public machine_id: number

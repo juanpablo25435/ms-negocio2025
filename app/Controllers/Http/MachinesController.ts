@@ -31,7 +31,7 @@ export default class MachinesController {
         const validatedData = await request.validate(MachineValidator);
         // Actualiza los datos de la máquina
         theMachine.name = validatedData.name;
-        theMachine.description = validatedData.description;
+        theMachine.description = validatedData.description ?? '';
         theMachine.model_year = validatedData.model_year;
         return await theMachine.save();
     }

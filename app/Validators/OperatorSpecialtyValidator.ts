@@ -1,40 +1,25 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class OperatorSpecialtyValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  /*
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string([ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string([
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({})
+  public schema = schema.create({
+    operator_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'operators', column: 'id' }), // Verifica que el operador exista
+    ]),
+    specialty_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'specialties', column: 'id' }), // Verifica que la especialidad exista
+    ]),
+  })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    // Mensajes personalizados para los campos principales
+    'operator_id.required': 'El ID del operador es obligatorio',
+    'operator_id.exists': 'El operador especificado no existe',
+    'specialty_id.required': 'El ID de la especialidad es obligatorio',
+    'specialty_id.exists': 'La especialidad especificada no existe',
+  }
 }

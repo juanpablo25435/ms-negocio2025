@@ -34,17 +34,6 @@ export default class ComboMachineValidator {
     ])
   })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
   public messages: CustomMessages = {
     'machine_id.required': 'La máquina es requerida',
     'machine_id.exists': 'La máquina seleccionada no existe',

@@ -1,40 +1,65 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class OperatorValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  /*
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string([ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string([
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({})
+  public schema = schema.create({
+    name: schema.string([
+      rules.required(),
+      rules.minLength(3),
+      rules.maxLength(255),
+    ]),
+    operator_id: schema.number([
+      rules.required(),
+      rules.unique({ table: 'operators', column: 'operator_id' }), // Verifica que el operador sea único
+    ]),
+    user_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'users', column: 'id' }), // Verifica que el usuario exista
+    ]),
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
-  public messages: CustomMessages = {}
+    // Relación con specialties
+    specialties: schema.array().members(
+      schema.number([
+        rules.exists({ table: 'specialties', column: 'id' }), // Verifica que la especialidad exista
+      ])
+    ),
+
+    // Relación con machines
+    machines: schema.array().members(
+      schema.object().members({
+        machine_id: schema.number([
+          rules.exists({ table: 'machines', column: 'id' }), // Verifica que la máquina exista
+        ]),
+        start_time: schema.date({format: 'yyyy-MM-dd'},[
+          rules.required(),
+        ]),
+        end_time: schema.date({format: 'yyyy-MM-dd'},[
+          rules.required(),
+          rules.afterField('start_time'), // Valida que la hora de fin sea posterior a la de inicio
+        ]),
+      })
+    ),
+  })
+
+  public messages: CustomMessages = {
+    // Mensajes personalizados para los campos principales
+    'name.required': 'El nombre del operador es obligatorio',
+    'name.minLength': 'El nombre debe tener al menos 3 caracteres',
+    'name.maxLength': 'El nombre no puede exceder los 255 caracteres',
+    'operator_id.required': 'El ID del operador es obligatorio',
+    'operator_id.unique': 'El ID del operador ya está en uso',
+    'user_id.required': 'El ID del usuario es obligatorio',
+    'user_id.exists': 'El usuario especificado no existe',
+
+    // Mensajes personalizados para specialties
+    'specialties.*.exists': 'La especialidad especificada no existe',
+
+    // Mensajes personalizados para machines
+    'machines.*.machine_id.exists': 'La máquina especificada no existe',
+    'machines.*.start_time.required': 'La hora de inicio es obligatoria',
+    'machines.*.end_time.required': 'La hora de fin es obligatoria',
+    'machines.*.end_time.afterField': 'La hora de fin debe ser posterior a la hora de inicio',
+  }
 }

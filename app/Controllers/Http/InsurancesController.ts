@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Insurance from 'App/Models/Insurance';
+import InsuranceValidator from 'App/Validators/InsuranceValidator';
 
 export default class InsurancesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,17 +21,17 @@ export default class InsurancesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theInsurance: Insurance = await Insurance.create(body);
+        const validatedData = await request.validate(InsuranceValidator);
+        const theInsurance: Insurance = await Insurance.create(validatedData);
         return theInsurance;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theInsurance: Insurance = await Insurance.findOrFail(params.id);
-        const body = request.body();
-        theInsurance.name = body.name;
-        theInsurance.insurance_entity = body.insurance_entity;
-        theInsurance.insurance_number = body.insurance_number;
+        const validatedData = await request.validate(InsuranceValidator);
+        theInsurance.name = validatedData.name;
+        theInsurance.insurance_entity = validatedData.insurance_entity;
+        theInsurance.insurance_number = validatedData.insurance_number;
         return await theInsurance.save();
     }
 

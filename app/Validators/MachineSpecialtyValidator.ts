@@ -1,40 +1,24 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class MachineSpecialtyValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  /*
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string([ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string([
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({})
+  public schema = schema.create({
+    machine_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'machines', column: 'id' }), // Verifica que la máquina exista
+    ]),
+    service_type_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'service_types', column: 'id' }), // Verifica que el tipo de servicio exista
+    ]),
+  })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'machine_id.required': 'El ID de la máquina es obligatorio',
+    'machine_id.exists': 'La máquina especificada no existe',
+    'service_type_id.required': 'El ID del tipo de servicio es obligatorio',
+    'service_type_id.exists': 'El tipo de servicio especificado no existe',
+  }
 }

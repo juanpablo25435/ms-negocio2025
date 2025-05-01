@@ -30,7 +30,7 @@ export default class SparesController {
             const theSpare: Spare = await Spare.findOrFail(params.id);
             const validatedData = await request.validate(SpareValidator)
             theSpare.name = validatedData.name;
-            theSpare.description = validatedData.description;
+            theSpare.description = validatedData.description ?? '';
             theSpare.price = validatedData.price;
             return await theSpare.save();
         }

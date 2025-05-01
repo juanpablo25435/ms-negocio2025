@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import WorkMunicipality from 'App/Models/WorkMunicipality';
+import WorkMunicipalityValidator from 'App/Validators/WorkMunicipalityValidator';
 
 export default class WorkMunicipalitiesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,16 +21,16 @@ export default class WorkMunicipalitiesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theWorkMunicipality: WorkMunicipality = await WorkMunicipality.create(body);
+        const validatedData = await request.validate(WorkMunicipalityValidator);
+        const theWorkMunicipality: WorkMunicipality = await WorkMunicipality.create(validatedData);
         return theWorkMunicipality;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theWorkMunicipality: WorkMunicipality = await WorkMunicipality.findOrFail(params.id);
-        const body = request.body();
-        theWorkMunicipality.work_id = body.work_id;
-        theWorkMunicipality.municipality_id = body.municipality_id;
+        const validatedData = await request.validate(WorkMunicipalityValidator);
+        theWorkMunicipality.work_id = validatedData.work_id;
+        theWorkMunicipality.municipality_id = validatedData.municipality_id;
         return await theWorkMunicipality.save();
     }
 

@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Shift from 'App/Models/Shift';
+import ShiftValidator from 'App/Validators/ShiftValidator';
 
 export default class ShiftsController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,18 +21,18 @@ export default class ShiftsController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theShift: Shift = await Shift.create(body);
+        const validatedData = await request.validate(ShiftValidator);
+        const theShift: Shift = await Shift.create(validatedData);
         return theShift;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theShift: Shift = await Shift.findOrFail(params.id);
-        const body = request.body();
-        theShift.start_time = body.start_time;
-        theShift.end_time = body.end_time;
-        theShift.machine_id = body.machine_id;
-        theShift.operator_id = body.operator_id;
+        const validatedData = await request.validate(ShiftValidator);
+        theShift.start_time = validatedData.start_time;
+        theShift.end_time = validatedData.end_time;
+        theShift.machine_id = validatedData.machine_id;
+        theShift.operator_id = validatedData.operator_id;
         return await theShift.save();
     }
 

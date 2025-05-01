@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import OperatorSpecialty from 'App/Models/OperatorSpecialty';
+import OperatorSpecialtyValidator from 'App/Validators/OperatorSpecialtyValidator';
 
 export default class OperatorSpecialtiesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,16 +21,16 @@ export default class OperatorSpecialtiesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theOperatorSpecialty: OperatorSpecialty = await OperatorSpecialty.create(body);
+        const validatedData = await request.validate(OperatorSpecialtyValidator);
+        const theOperatorSpecialty: OperatorSpecialty = await OperatorSpecialty.create(validatedData);
         return theOperatorSpecialty;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theOperatorSpecialty: OperatorSpecialty = await OperatorSpecialty.findOrFail(params.id);
-        const body = request.body();
-        theOperatorSpecialty.operator_id = body.operator_id;
-        theOperatorSpecialty.specialty_id = body.specialty_id;  
+        const validatedData = await request.validate(OperatorSpecialtyValidator);
+        theOperatorSpecialty.operator_id = validatedData.operator_id;
+        theOperatorSpecialty.specialty_id = validatedData.specialty_id;  
         return await theOperatorSpecialty.save();
     }
 

@@ -34,10 +34,10 @@ export default class FeeValidator {
       })
     ]),
     
-    fee_date: schema.string([
+    fee_date: schema.date({format: 'yyyy-MM-dd'}, [
       rules.required(),
       rules.regex(/^\d{4}-\d{2}-\d{2}$/), // Formato YYYY-MM-DD
-      rules.beforeOrEqual('today') // No puede ser fecha futura
+      rules.beforeOrEqual('today') // La fecha no puede ser futura
     ]),
     
     fee_amount: schema.number([

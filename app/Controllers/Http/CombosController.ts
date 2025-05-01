@@ -30,7 +30,7 @@ export default class CombosController {
         const theCombo: Combo = await Combo.findOrFail(params.id);
         const validatedData = await request.validate(ComboValidator)
         theCombo.name = validatedData.name
-        theCombo.description = validatedData.description
+        theCombo.description = validatedData.description ?? ''
         theCombo.price = validatedData.price
         theCombo.services_id = validatedData.services_id
         return await theCombo.save();

@@ -9,10 +9,10 @@ export default class Policy extends BaseModel {
   public policy_number: number
 
   @column()
-  public start_date: Date
+  public start_date: DateTime
 
   @column()
-  public end_date: Date
+  public end_date: DateTime
 
   @column()
   public machine_id: number

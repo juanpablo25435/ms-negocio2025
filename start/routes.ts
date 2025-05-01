@@ -24,5 +24,7 @@ Route.get('/', async () => {
   return { hello: 'world' }
 })
 
+import './routes/Chats'
+import './routes/ComboMachines'
+import './routes/Combos'
 import './routes/Departments'
-

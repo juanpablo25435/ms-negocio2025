@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import MachineSpecialty from 'App/Models/MachineSpecialty';
+import MachineSpecialtyValidator from 'App/Validators/MachineSpecialtyValidator';
 
 export default class MachineSpecialtiesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,16 +21,16 @@ export default class MachineSpecialtiesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theMachineSpecialty: MachineSpecialty = await MachineSpecialty.create(body);
+        const validatedData = await request.validate(MachineSpecialtyValidator);
+        const theMachineSpecialty: MachineSpecialty = await MachineSpecialty.create(validatedData);
         return theMachineSpecialty;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theMachineSpecialty: MachineSpecialty = await MachineSpecialty.findOrFail(params.id);
-        const body = request.body();
-        theMachineSpecialty.machine_id = body.machine_id;
-        theMachineSpecialty.service_type_id = body.service_type_id;
+        const validatedData = await request.validate(MachineSpecialtyValidator);
+        theMachineSpecialty.machine_id = validatedData.machine_id;
+        theMachineSpecialty.service_type_id = validatedData.service_type_id;
         return await theMachineSpecialty.save();
     }
 

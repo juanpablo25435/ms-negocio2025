@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Invoice from 'App/Models/Invoice';
+import InvoiceValidator from 'App/Validators/InvoiceValidator';
 
 export default class InvoicesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,17 +21,17 @@ export default class InvoicesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theInvoice: Invoice = await Invoice.create(body);
+        const validatedData = await request.validate(InvoiceValidator);
+        const theInvoice: Invoice = await Invoice.create(validatedData);
         return theInvoice;
-    }
+    }   
 
     public async update({ params, request }: HttpContextContract) {
         const theInvoice: Invoice = await Invoice.findOrFail(params.id);
-        const body = request.body();
-        theInvoice.invoice_number = body.invoice_number;
-        theInvoice.invoice_date = body.invoice_date;
-        theInvoice.total_amount = body.total_amount;
+        const validatedData = await request.validate(InvoiceValidator);
+        theInvoice.invoice_number = validatedData.invoice_number;
+        theInvoice.invoice_date = validatedData.invoice_date;
+        theInvoice.total_amount = validatedData.total_amount;
         return await theInvoice.save();
     }
 

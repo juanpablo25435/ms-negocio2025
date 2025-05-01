@@ -32,24 +32,25 @@ export default class DepartmentValidator {
         table: 'departments', 
         column: 'name',
       })
-    ])
+    ]),
+    governor_id: schema.number([
+      rules.exists({ table: 'governors', column: 'id' }), // Verifica que el gobernador exista
+    ]),
+
+    municipalities: schema.array().members(
+      schema.number([
+        rules.exists({ table: 'municipalities', column: 'id' }), // Verifica que los municipios existan
+      ])
+    ),
   })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
+  
   public messages: CustomMessages = {
     'name.required': 'El nombre del departamento es requerido',
     'name.minLength': 'El nombre debe tener al menos 3 caracteres',
     'name.maxLength': 'El nombre no puede exceder los 100 caracteres',
-    'name.unique': 'Ya existe un departamento con este nombre'
+    'name.unique': 'Ya existe un departamento con este nombre',
+    'governor_id.exists': 'El gobernador especificado no existe',
+    'municipalities.*.exists': 'El municipio especificado no existe',
   }
 }

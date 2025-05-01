@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Procedure from 'App/Models/Procedure';
+import ProcedureValidator from 'App/Validators/ProcedureValidator';
 
 export default class ProceduresController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,16 +21,16 @@ export default class ProceduresController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theProcedure: Procedure = await Procedure.create(body);
+        const validatedData = await request.validate(ProcedureValidator);
+        const theProcedure: Procedure = await Procedure.create(validatedData);
         return theProcedure;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theProcedure: Procedure = await Procedure.findOrFail(params.id);
-        const body = request.body();
-        theProcedure.name = body.name;
-        theProcedure.description = body.description;
+        const validatedData = await request.validate(ProcedureValidator);
+        theProcedure.name = validatedData.name;
+        theProcedure.description = validatedData.description ?? '';
         return await theProcedure.save();
     }
 

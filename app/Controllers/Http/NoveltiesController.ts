@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Novelty from 'App/Models/Novelty';
+import NoveltyValidator from 'App/Validators/NoveltyValidator';
 
 export default class NoveltiesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,16 +21,16 @@ export default class NoveltiesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theNovelty: Novelty = await Novelty.create(body);
+        const validatedData = await request.validate(NoveltyValidator);
+        const theNovelty: Novelty = await Novelty.create(validatedData);
         return theNovelty;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theNovelty: Novelty = await Novelty.findOrFail(params.id);
-        const body = request.body();
-        theNovelty.novelty_description = body.novelty_description;
-        theNovelty.shift_id = body.shift_id;
+        const validatedData = await request.validate(NoveltyValidator);
+        theNovelty.novelty_description = validatedData.novelty_description;
+        theNovelty.shift_id = validatedData.shift_id;
         return await theNovelty.save();
     }
 

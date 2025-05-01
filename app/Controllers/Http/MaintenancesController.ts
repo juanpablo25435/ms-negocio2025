@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Maintenance from 'App/Models/Maintenance';
+import MaintenanceValidator from 'App/Validators/MaintenanceValidator';
 
 export default class MaintenancesController {
     public async find({ request, params }: HttpContextContract) {
@@ -20,17 +21,17 @@ export default class MaintenancesController {
 
     }
     public async create({ request }: HttpContextContract) {
-        const body = request.body();
-        const theMaintenance: Maintenance = await Maintenance.create(body);
+        const validatedData = await request.validate(MaintenanceValidator);
+        const theMaintenance: Maintenance = await Maintenance.create(validatedData);
         return theMaintenance;
     }
 
     public async update({ params, request }: HttpContextContract) {
         const theMaintenance: Maintenance = await Maintenance.findOrFail(params.id);
-        const body = request.body();
-        theMaintenance.description = body.description;
-        theMaintenance.date_performed = body.date_performed;
-        theMaintenance.machine_id = body.machine_id;
+        const validatedData = await request.validate(MaintenanceValidator);
+        theMaintenance.description = validatedData.description;
+        theMaintenance.date_performed = validatedData.date_performed;
+        theMaintenance.machine_id = validatedData.machine_id;
         return await theMaintenance.save();
     }
 

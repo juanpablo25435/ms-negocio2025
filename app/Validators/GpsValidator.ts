@@ -36,7 +36,7 @@ export default class GpsValidator {
       rules.maxLength(20)
     ]),
     
-    altitude: schema.string.optional({ trim: true }, [
+    altitude: schema.string({ trim: true }, [
       rules.regex(/^-?\d+\.?\d*$/), // Número con decimales opcional
       rules.maxLength(15)
     ]),
@@ -47,17 +47,6 @@ export default class GpsValidator {
     ])
   })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
   public messages: CustomMessages = {
     'latitude.required': 'La latitud es requerida',
     'latitude.regex': 'La latitud debe ser un valor entre -90 y 90 grados',

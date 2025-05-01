@@ -1,40 +1,33 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class MessageValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  /*
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string([ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string([
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({})
+  public schema = schema.create({
+    user_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'users', column: 'id' }), // Verifica que el usuario exista
+    ]),
+    chat_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'chats', column: 'id' }), // Verifica que el chat exista
+    ]),
+    message: schema.string([
+      rules.required(),
+      rules.minLength(1), // El mensaje debe tener al menos 1 carácter
+      rules.maxLength(500), // El mensaje no puede exceder los 500 caracteres
+    ]),
+  })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    // Mensajes personalizados para los campos principales
+    'user_id.required': 'El ID del usuario es obligatorio',
+    'user_id.exists': 'El usuario especificado no existe',
+    'chat_id.required': 'El ID del chat es obligatorio',
+    'chat_id.exists': 'El chat especificado no existe',
+    'message.required': 'El contenido del mensaje es obligatorio',
+    'message.minLength': 'El mensaje debe tener al menos 1 carácter',
+    'message.maxLength': 'El mensaje no puede exceder los 500 caracteres',
+  }
 }

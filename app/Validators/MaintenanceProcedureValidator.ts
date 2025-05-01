@@ -1,40 +1,35 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class MaintenanceProcedureValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  /*
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string([ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string([
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({})
+  public schema = schema.create({
+    procedure_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'procedures', column: 'id' }), // Verifica que el procedimiento exista
+    ]),
+    maintenance_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'maintenances', column: 'id' }), // Verifica que el mantenimiento exista
+    ]),
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
-  public messages: CustomMessages = {}
+    // Relación con spares (opcional)
+    spares: schema.array.optional().members(
+      schema.number([
+        rules.exists({ table: 'spares', column: 'id' }), // Verifica que el repuesto exista
+      ])
+    ),
+  })
+
+  public messages: CustomMessages = {
+    // Mensajes personalizados para los campos principales
+    'procedure_id.required': 'El ID del procedimiento es obligatorio',
+    'procedure_id.exists': 'El procedimiento especificado no existe',
+    'maintenance_id.required': 'El ID del mantenimiento es obligatorio',
+    'maintenance_id.exists': 'El mantenimiento especificado no existe',
+
+    // Mensajes personalizados para los repuestos
+    'spares.*.exists': 'El repuesto especificado no existe',
+  }
 }

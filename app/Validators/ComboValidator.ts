@@ -21,14 +21,7 @@ export default class ComboValidator {
     services_id: schema.number([
       rules.required(),
       rules.exists({ table: 'services', column: 'id' }), // Verifica que el servicio exista
-    ]),
-
-    // Relación con máquinas
-    machines: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'machines', column: 'id' }), // Verifica que las máquinas existan
-      ])
-    ),
+    ])
   })
 
   public messages: CustomMessages = {
@@ -41,8 +34,5 @@ export default class ComboValidator {
     'price.unsigned': 'El precio debe ser un número positivo',
     'services_id.required': 'El ID del servicio es obligatorio',
     'services_id.exists': 'El servicio especificado no existe',
-
-    // Mensajes personalizados para las máquinas
-    'machines.*.exists': 'La máquina especificada no existe',
   }
 }

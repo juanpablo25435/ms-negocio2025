@@ -9,7 +9,7 @@ export default class Invoice extends BaseModel {
   @column()
   public invoice_number: string
 
-  @column()
+  @column.date()
   public invoice_date: DateTime
 
   @column()

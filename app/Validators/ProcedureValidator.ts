@@ -12,14 +12,7 @@ export default class ProcedureValidator {
     ]),
     description: schema.string.optional([
       rules.maxLength(500),
-    ]),
-
-    // Relación con maintenances
-    maintenances: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'maintenances', column: 'id' }), // Verifica que el mantenimiento exista
-      ])
-    ),
+    ])
   })
 
   public messages: CustomMessages = {
@@ -27,9 +20,6 @@ export default class ProcedureValidator {
     'name.required': 'El nombre del procedimiento es obligatorio',
     'name.minLength': 'El nombre debe tener al menos 3 caracteres',
     'name.maxLength': 'El nombre no puede exceder los 255 caracteres',
-    'description.maxLength': 'La descripción no puede exceder los 500 caracteres',
-
-    // Mensajes personalizados para los mantenimientos
-    'maintenances.*.exists': 'El mantenimiento especificado no existe',
+    'description.maxLength': 'La descripción no puede exceder los 500 caracteres'
   }
 }

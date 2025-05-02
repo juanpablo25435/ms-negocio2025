@@ -32,16 +32,7 @@ export default class DepartmentValidator {
         table: 'departments', 
         column: 'name',
       })
-    ]),
-    governor_id: schema.number([
-      rules.exists({ table: 'governors', column: 'id' }), // Verifica que el gobernador exista
-    ]),
-
-    municipalities: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'municipalities', column: 'id' }), // Verifica que los municipios existan
-      ])
-    ),
+    ])
   })
 
   
@@ -50,7 +41,6 @@ export default class DepartmentValidator {
     'name.minLength': 'El nombre debe tener al menos 3 caracteres',
     'name.maxLength': 'El nombre no puede exceder los 100 caracteres',
     'name.unique': 'Ya existe un departamento con este nombre',
-    'governor_id.exists': 'El gobernador especificado no existe',
-    'municipalities.*.exists': 'El municipio especificado no existe',
+
   }
 }

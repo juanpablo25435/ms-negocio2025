@@ -12,14 +12,7 @@ export default class MaintenanceProcedureValidator {
     maintenance_id: schema.number([
       rules.required(),
       rules.exists({ table: 'maintenances', column: 'id' }), // Verifica que el mantenimiento exista
-    ]),
-
-    // Relación con spares (opcional)
-    spares: schema.array.optional().members(
-      schema.number([
-        rules.exists({ table: 'spares', column: 'id' }), // Verifica que el repuesto exista
-      ])
-    ),
+    ])
   })
 
   public messages: CustomMessages = {
@@ -27,9 +20,6 @@ export default class MaintenanceProcedureValidator {
     'procedure_id.required': 'El ID del procedimiento es obligatorio',
     'procedure_id.exists': 'El procedimiento especificado no existe',
     'maintenance_id.required': 'El ID del mantenimiento es obligatorio',
-    'maintenance_id.exists': 'El mantenimiento especificado no existe',
-
-    // Mensajes personalizados para los repuestos
-    'spares.*.exists': 'El repuesto especificado no existe',
+    'maintenance_id.exists': 'El mantenimiento especificado no existe'
   }
 }

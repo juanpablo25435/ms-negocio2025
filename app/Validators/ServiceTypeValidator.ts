@@ -10,16 +10,12 @@ export default class ServiceTypeValidator {
       rules.minLength(3),
       rules.maxLength(255),
     ]),
-    description: schema.string.optional([
+    description: schema.string([
+      rules.required(),
+      rules.minLength(3),
       rules.maxLength(500),
     ]),
 
-    // Relación con machines (opcional)
-    machines: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'machines', column: 'id' }), // Verifica que la máquina exista
-      ])
-    ),
   })
 
   public messages: CustomMessages = {
@@ -28,8 +24,5 @@ export default class ServiceTypeValidator {
     'name.minLength': 'El nombre debe tener al menos 3 caracteres',
     'name.maxLength': 'El nombre no puede exceder los 255 caracteres',
     'description.maxLength': 'La descripción no puede exceder los 500 caracteres',
-
-    // Mensajes personalizados para las máquinas
-    'machines.*.exists': 'La máquina especificada no existe',
   }
 }

@@ -15,12 +15,6 @@ export default class MunicipalityValidator {
       rules.exists({ table: 'departments', column: 'id' }), // Verifica que el departamento exista
     ]),
 
-    // Relación con trabajos (opcional)
-    works: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'works', column: 'id' }), // Verifica que el trabajo exista
-      ])
-    ),
   })
 
   public messages: CustomMessages = {
@@ -31,7 +25,5 @@ export default class MunicipalityValidator {
     'department_id.required': 'El ID del departamento es obligatorio',
     'department_id.exists': 'El departamento especificado no existe',
 
-    // Mensajes personalizados para los trabajos
-    'works.*.exists': 'El trabajo especificado no existe',
   }
 }

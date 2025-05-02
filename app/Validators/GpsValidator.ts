@@ -49,11 +49,11 @@ export default class GpsValidator {
 
   public messages: CustomMessages = {
     'latitude.required': 'La latitud es requerida',
-    'latitude.regex': 'La latitud debe ser un valor entre -90 y 90 grados',
+    'latitude.regex': 'La latitud debe ser un valor entre -90 y 90 grados. DD = grados + (minutos / 60) + (segundos / 3600)',
     'latitude.maxLength': 'La latitud no puede exceder los 20 caracteres',
     
     'longitude.required': 'La longitud es requerida',
-    'longitude.regex': 'La longitud debe ser un valor entre -180 y 180 grados',
+    'longitude.regex': 'La longitud debe ser un valor entre -180 y 180 grados. DD = grados + (minutos / 60) + (segundos / 3600)',
     'longitude.maxLength': 'La longitud no puede exceder los 20 caracteres',
     
     'altitude.regex': 'La altitud debe ser un valor numérico',

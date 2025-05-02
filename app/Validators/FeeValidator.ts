@@ -34,9 +34,8 @@ export default class FeeValidator {
       })
     ]),
     
-    fee_date: schema.date({format: 'yyyy-MM-dd'}, [
+    fee_date: schema.date({ format: 'yyyy-MM-dd' }, [
       rules.required(),
-      rules.regex(/^\d{4}-\d{2}-\d{2}$/), // Formato YYYY-MM-DD
       rules.beforeOrEqual('today') // La fecha no puede ser futura
     ]),
     
@@ -73,7 +72,7 @@ export default class FeeValidator {
     'fee_number.unique': 'Este número de cuota ya existe para esta factura',
     
     'fee_date.required': 'La fecha de la cuota es requerida',
-    'fee_date.regex': 'La fecha debe tener formato YYYY-MM-DD',
+    'fee_date.format': 'El formato de la fecha debe ser yyyy-MM-dd',
     'fee_date.beforeOrEqual': 'La fecha no puede ser futura',
     
     'fee_amount.required': 'El monto de la cuota es requerido',

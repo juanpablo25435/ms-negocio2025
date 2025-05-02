@@ -8,7 +8,7 @@ export default class Fee extends BaseModel {
   @column()
   public fee_number: number
 
-  @column()
+  @column.date()
   public fee_date: DateTime
 
   @column()

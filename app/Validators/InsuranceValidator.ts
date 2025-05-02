@@ -20,25 +20,7 @@ export default class InsuranceValidator {
       rules.maxLength(50),
     ]),
 
-    // Relación con máquinas (opcional)
-    machines: schema.array().members(
-      schema.object().members({
-        machine_id: schema.number([
-          rules.exists({ table: 'machines', column: 'id' }), // Verifica que la máquina exista
-        ]),
-        policy_number: schema.string([
-          rules.required(),
-          rules.maxLength(255),
-        ]),
-        start_date: schema.date({format: 'yyyy-MM-dd'},[
-          rules.required(),
-        ]),
-        end_date: schema.date({format: 'yyyy-MM-dd'},[
-          rules.required(),
-          rules.afterField('start_date'), // Valida que la fecha de fin sea posterior a la de inicio
-        ]),
-      })
-    ),
+    
   })
 
   public messages: CustomMessages = {
@@ -50,13 +32,5 @@ export default class InsuranceValidator {
     'insurance_entity.maxLength': 'La entidad aseguradora no puede exceder los 255 caracteres',
     'insurance_number.required': 'El número del seguro es obligatorio',
     'insurance_number.maxLength': 'El número del seguro no puede exceder los 50 caracteres',
-
-    // Mensajes personalizados para las máquinas
-    'machines.*.machine_id.exists': 'La máquina especificada no existe',
-    'machines.*.policy_number.required': 'El número de póliza es obligatorio',
-    'machines.*.policy_number.maxLength': 'El número de póliza no puede exceder los 255 caracteres',
-    'machines.*.start_date.required': 'La fecha de inicio es obligatoria',
-    'machines.*.end_date.required': 'La fecha de fin es obligatoria',
-    'machines.*.end_date.afterField': 'La fecha de fin debe ser posterior a la fecha de inicio',
   }
 }

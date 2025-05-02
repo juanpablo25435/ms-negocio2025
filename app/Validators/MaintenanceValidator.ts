@@ -18,14 +18,7 @@ export default class MaintenanceValidator {
     machine_id: schema.number([
       rules.required(),
       rules.exists({ table: 'machines', column: 'id' }), // Verifica que la máquina exista
-    ]),
-
-    // Relación con procedimientos (opcional)
-    procedures: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'procedures', column: 'id' }), // Verifica que el procedimiento exista
-      ])
-    ),
+    ])
   })
 
   public messages: CustomMessages = {
@@ -37,8 +30,5 @@ export default class MaintenanceValidator {
     'date_performed.format': 'La fecha de realización debe estar en el formato yyyy-MM-dd',
     'machine_id.required': 'El ID de la máquina es obligatorio',
     'machine_id.exists': 'La máquina especificada no existe',
-
-    // Mensajes personalizados para los procedimientos
-    'procedures.*.exists': 'El procedimiento especificado no existe',
   }
 }

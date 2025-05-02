@@ -16,14 +16,7 @@ export default class SpareValidator {
     price: schema.number([
       rules.required(),
       rules.unsigned(), // El precio debe ser positivo
-    ]),
-
-    // Relación con maintenances (opcional)
-    maintenances: schema.array.optional().members(
-      schema.number([
-        rules.exists({ table: 'maintenance_procedures', column: 'id' }), // Verifica que el procedimiento de mantenimiento exista
-      ])
-    ),
+    ])
   })
 
   public messages: CustomMessages = {

@@ -17,14 +17,7 @@ export default class WorkValidator {
     combo_id: schema.number([
       rules.required(),
       rules.exists({ table: 'combos', column: 'id' }), // Verifica que el combo exista
-    ]),
-
-    // Relación con municipalities (opcional)
-    municipalities: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'municipalities', column: 'id' }), // Verifica que el municipio exista
-      ])
-    ),
+    ])
   })
 
   public messages: CustomMessages = {
@@ -35,9 +28,6 @@ export default class WorkValidator {
     'location.required': 'La ubicación de la obra es obligatoria',
     'location.maxLength': 'La ubicación no puede exceder los 500 caracteres',
     'combo_id.required': 'El ID del combo es obligatorio',
-    'combo_id.exists': 'El combo especificado no existe',
-
-    // Mensajes personalizados para los municipios
-    'municipalities.*.exists': 'El municipio especificado no existe',
+    'combo_id.exists': 'El combo especificado no existe'
   }
 }

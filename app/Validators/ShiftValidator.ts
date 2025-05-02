@@ -20,14 +20,7 @@ export default class ShiftValidator {
     operator_id: schema.number([
       rules.required(),
       rules.exists({ table: 'operators', column: 'id' }), // Verifica que el operador exista
-    ]),
-
-    // Relación con novelties (opcional)
-    novelties: schema.array.optional().members(
-      schema.number([
-        rules.exists({ table: 'novelties', column: 'id' }), // Verifica que la novedad exista
-      ])
-    ),
+    ])
   })
 
   public messages: CustomMessages = {
@@ -39,9 +32,6 @@ export default class ShiftValidator {
     'machine_id.required': 'El ID de la máquina es obligatorio',
     'machine_id.exists': 'La máquina especificada no existe',
     'operator_id.required': 'El ID del operador es obligatorio',
-    'operator_id.exists': 'El operador especificado no existe',
-
-    // Mensajes personalizados para las novedades
-    'novelties.*.exists': 'La novedad especificada no existe',
+    'operator_id.exists': 'El operador especificado no existe'
   }
 }

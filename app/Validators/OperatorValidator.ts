@@ -17,30 +17,7 @@ export default class OperatorValidator {
     user_id: schema.number([
       rules.required(),
       rules.exists({ table: 'users', column: 'id' }), // Verifica que el usuario exista
-    ]),
-
-    // Relación con specialties
-    specialties: schema.array().members(
-      schema.number([
-        rules.exists({ table: 'specialties', column: 'id' }), // Verifica que la especialidad exista
-      ])
-    ),
-
-    // Relación con machines
-    machines: schema.array().members(
-      schema.object().members({
-        machine_id: schema.number([
-          rules.exists({ table: 'machines', column: 'id' }), // Verifica que la máquina exista
-        ]),
-        start_time: schema.date({format: 'yyyy-MM-dd'},[
-          rules.required(),
-        ]),
-        end_time: schema.date({format: 'yyyy-MM-dd'},[
-          rules.required(),
-          rules.afterField('start_time'), // Valida que la hora de fin sea posterior a la de inicio
-        ]),
-      })
-    ),
+    ])
   })
 
   public messages: CustomMessages = {

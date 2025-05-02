@@ -3,6 +3,8 @@ import { BaseModel, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm
 import Machine from './Machine'
 
 export default class ServiceType extends BaseModel {
+  public static table = 'services_types'
+
   @column({ isPrimary: true })
   public id: number
 

@@ -14,6 +14,7 @@ export default class Insurance extends BaseModel {
 
   @column()
   public insurance_number: string
+  
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

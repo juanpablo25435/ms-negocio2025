@@ -11,7 +11,7 @@ export default class MachineSpecialtyValidator {
     ]),
     service_type_id: schema.number([
       rules.required(),
-      rules.exists({ table: 'service_types', column: 'id' }), // Verifica que el tipo de servicio exista
+      rules.exists({ table: 'services_types', column: 'id' }), // Verifica que el tipo de servicio exista
     ]),
   })
 

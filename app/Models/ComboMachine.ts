@@ -2,6 +2,8 @@ import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
 export default class ComboMachine extends BaseModel {
+  public static table = 'combos_machines'
+
   @column({ isPrimary: true })
   public id: number
 

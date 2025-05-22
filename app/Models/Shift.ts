@@ -7,10 +7,10 @@ export default class Shift extends BaseModel {
   public id: number
 
   @column()
-  public start_time: number
+  public start_time: DateTime
 
   @column()
-  public end_time: number
+  public end_time: DateTime
 
   @column()
   public machine_id: number

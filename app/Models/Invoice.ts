@@ -1,28 +1,29 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import Fee from './Fee'
+import { DateTime } from "luxon";
+import { BaseModel, belongsTo, BelongsTo, column, HasOne, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import Fee from "./Fee";
 
 export default class Invoice extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public invoice_number: string
+  public invoice_number: string;
 
   @column.date()
-  public invoice_date: DateTime
+  public invoice_date: DateTime;
 
   @column()
-  public total_amount: number
-  
+  public total_amount: number;
+
+  @column()
+  public fee_id: number;
+
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 
-  @hasOne(() => Fee, {
-    foreignKey: 'invoice_id',
-  })
-  public fee: HasOne<typeof Fee>
+  @belongsTo(() => Fee, { foreignKey: "fee_id" })
+  public fee: BelongsTo<typeof Fee>;
 }

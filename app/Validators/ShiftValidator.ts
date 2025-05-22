@@ -5,13 +5,11 @@ export default class ShiftValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    start_time: schema.number([
+    start_time: schema.date({ format: 'yyyy-MM-dd HH:mm:ss' }, [
       rules.required(),
-      rules.unsigned(), // Asegura que sea un número positivo
     ]),
-    end_time: schema.number([
+    end_time: schema.date({ format: 'yyyy-MM-dd HH:mm:ss' }, [
       rules.required(),
-      rules.unsigned(),
     ]),
     machine_id: schema.number([
       rules.required(),

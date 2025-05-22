@@ -6,8 +6,8 @@ export default class extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('start_time').notNullable()
-      table.integer('end_time').notNullable()
+      table.datetime('start_time').notNullable()
+      table.datetime('end_time').notNullable()
       table.integer('machine_id').unsigned().notNullable().references('id').inTable('machines').onDelete('CASCADE')
       table.integer('operator_id').unsigned().notNullable().references('id').inTable('operators').onDelete('CASCADE')
       /**

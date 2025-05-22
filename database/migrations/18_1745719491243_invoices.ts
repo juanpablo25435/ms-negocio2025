@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('invoice_number').notNullable().unique()
       table.date('invoice_date').notNullable()
       table.integer('total_amount').notNullable()
+      table.integer('fee_id').unsigned().notNullable().references('id').inTable('fees').onDelete('CASCADE')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

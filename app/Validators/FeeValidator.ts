@@ -43,12 +43,7 @@ export default class FeeValidator {
       rules.required(),
       rules.range(0.01, 9999999.99) // Rango válido
     ]),
-    
-    invoice_id: schema.number([
-      rules.required(),
-      rules.exists({ table: 'invoices', column: 'id' })
-    ]),
-    
+       
     service_id: schema.number([
       rules.required(),
       rules.exists({ table: 'services', column: 'id' })

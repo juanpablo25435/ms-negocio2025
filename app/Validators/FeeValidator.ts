@@ -29,8 +29,7 @@ export default class FeeValidator {
       rules.unsigned(),
       rules.unique({ 
         table: 'fees', 
-        column: 'fee_number',
-        where: { invoice_id: this.ctx.request.input('invoice_id') }
+        column: 'fee_number'
       })
     ]),
     

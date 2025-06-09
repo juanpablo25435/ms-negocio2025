@@ -6,10 +6,10 @@ export default class Shift extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column()
+  @column.dateTime()
   public start_time: DateTime
 
-  @column()
+  @column.dateTime()
   public end_time: DateTime
 
   @column()

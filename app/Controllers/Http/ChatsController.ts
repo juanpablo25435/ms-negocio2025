@@ -1,6 +1,7 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Chat from "App/Models/Chat";
 import ChatValidator from "App/Validators/ChatValidator";
+import Ws from "App/Services/Ws";
 
 export default class ChatsController {
   public async find({ request, params }: HttpContextContract) {
@@ -36,4 +37,9 @@ export default class ChatsController {
     response.status(204);
     return await theChat.delete();
   }
+
+  public async sendMessage({ request }: HttpContextContract) {
+        Ws.io.emit('notifications', { message: 'Nueva Notificación' })
+        return { message: 'Mensaje enviado a todos los clientes conectados' };
+    }
 }
